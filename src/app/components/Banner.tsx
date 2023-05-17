@@ -9,8 +9,8 @@ export const Banner = () => {
           El carro de tus sueños <br></br>a un click
         </h1>
         <p className="text-white text-lg leading-relaxed">
-          VMOTOR busca por tí el vehículo mas económico en los principales{" "}
-          <br></br> concesionarios y Marketplaces del Perú.
+          VMOTOR busca por tí el vehículo mas económico en los<br></br>
+          principales concesionarios y Marketplaces del Perú.
         </p>
       </div>
     </div>
