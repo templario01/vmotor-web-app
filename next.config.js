@@ -4,6 +4,15 @@ const nextConfig = {
   images: {
     remotePatterns: [{ protocol: "https", hostname: "es.chrysler.com" }],
   },
+  async redirects() {
+    return [
+      {
+        source: "/home",
+        destination: "/",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

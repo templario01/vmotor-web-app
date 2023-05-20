@@ -2,6 +2,7 @@ import { Fragment, ReactNode } from "react";
 import { Location } from "iconsax-react";
 import { Tag } from "./Tag";
 import { Buttom } from "./Buttom";
+import Link from "next/link";
 
 export type Vehicle = {
   index: number;
@@ -121,13 +122,13 @@ export const Card = ({ vehicle }: CardProps) => {
                 alt="Avatar of Jonathan Reinink"
               />
             </div>
-            <a href={`${url}`} target="_blank">
+            <Link href={`${url}`} target="_blank">
               <Buttom
                 color="bg-blue-600"
                 text="Ver Publicación"
                 hover="bg-blue-700"
               />
-            </a>
+            </Link>
           </div>
         </div>
         {index < 3 && <Tag topNumber={index + 1} />}
