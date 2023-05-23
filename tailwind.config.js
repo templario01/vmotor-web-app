@@ -11,6 +11,11 @@ module.exports = {
       width: {
         card: "720px",
       },
+      colors: {
+        "disabled-1": "#F5F5F5",
+        "disabled-2": "#D9D9D9",
+        "disabled-3": "#CFCECE"
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":

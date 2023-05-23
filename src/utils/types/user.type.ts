@@ -3,6 +3,7 @@ export type User = {
   email: string;
   token: string;
   isAuthenticated: boolean;
+  hasActiveNotifications: boolean;
 };
 
 export interface DecodedJwt {
@@ -10,4 +11,5 @@ export interface DecodedJwt {
   readonly iat: number;
   readonly exp: number;
   readonly username: string;
+  readonly hasActiveNotifications: boolean;
 }

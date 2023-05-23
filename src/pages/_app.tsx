@@ -1,9 +1,8 @@
 import { ApolloProvider } from "@apollo/client";
-import client from "../../apollo-client";
+import { apolloClient } from "../../apollo-client";
 import "../app/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import type { AppProps } from "next/app";
-import { QueryClient, QueryClientProvider } from "react-query";
 import { RegisterProvider } from "../context/register.context";
 import { ToastContainer } from "react-toastify";
 import * as yup from "yup";
@@ -25,12 +24,9 @@ yup.setLocale({
   },
 });
 
-const queryClient = new QueryClient();
-
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ApolloProvider client={client}>
+      <ApolloProvider client={apolloClient}>
         <AuthProvider>
           <RegisterProvider>
             <Component {...pageProps} />
@@ -38,6 +34,5 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           <ToastContainer />
         </AuthProvider>
       </ApolloProvider>
-    </QueryClientProvider>
   );
 }

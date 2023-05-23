@@ -172,12 +172,12 @@ export const RegisterForm = () => {
           </div>
           <div className="ml-3 text-sm">
             <label className="font-light text-gray-500 dark:text-gray-300">
-              I accept the{" "}
+              Hé leído los{" "}
               <a
                 className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                 href="#"
               >
-                Terms and Conditions
+                Términos y condiciones
               </a>
             </label>
           </div>
@@ -191,13 +191,13 @@ export const RegisterForm = () => {
           Crear Cuenta
         </button>
         <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-          Already have an account?{" "}
-          <a
-            href="#"
+          ¿Yá tienes una cuenta?{" "}
+          <Link
+            href="/signin"
             className="font-medium text-primary-600 hover:underline dark:text-primary-500"
           >
-            Login here
-          </a>
+            Inisia sesión
+          </Link>
         </p>
       </form>
     </Fragment>

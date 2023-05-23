@@ -1,4 +1,5 @@
 
+"use client"
 export const Search = ({ onChange, onFocus }: any) => {
   return (
     <div className="w-full text-gray-600 h-14">

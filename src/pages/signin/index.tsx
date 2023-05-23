@@ -66,6 +66,7 @@ const SignInForm = () => {
       });
 
       authDispatch({ type: "login", token: data?.signIn.accessToken });
+      router.reload()
       router.push("/home");
     } catch (error) {
       toast.error(<ToastAlert error={error} />, errorProps);
