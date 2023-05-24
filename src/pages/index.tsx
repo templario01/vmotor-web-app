@@ -3,48 +3,39 @@ import Image from "next/image";
 import MainLayout from "../layouts/MainLayout";
 import NabBar from "../app/components/NavBar";
 import { Banner } from "../app/components/Banner";
-import SearchSection from "../app/components/search/SearchSection";
-import { gql, useApolloClient } from "@apollo/client";
+import SearchSection, {
+  cities,
+  conditionVehicles,
+} from "../app/components/search/SearchSection";
+import { useApolloClient } from "@apollo/client";
 import { Card } from "../app/components/Card";
-import { ReactElement, useRef, useState } from "react";
-
-const QUERY = (searchName = "") => gql`
-query{
-  getVehiclesByAdvancedSearch(searchName:"${searchName}"){
-    nodes{
-      uuid
-      url
-      externalId
-      description
-      price
-      originalPrice
-      frontImage
-      images
-      createdAt
-      updatedAt
-      location
-      mileage
-      condition
-      year
-      status
-      website{
-        name
-        uuid
-        url
-      }
-    }
-  }
-}
-`;
+import { useRef, useState } from "react";
+import {
+  GET_VEHICLES_BY_ADVANCE_SEARCH,
+  GetVehicleCondition,
+  GetVehiclesByAdvanceSearchRequest,
+  GetVehiclesResponse,
+  Vehicle,
+} from "../graphql/queries/get-vehicles-by-advance-search.query";
+import { GET_RECOMMENDED_VEHICLES } from "../graphql/queries/get-recommended-vehicles.query";
+import { GET_FAVORITE_VEHICLES } from "../graphql/queries/get-favorite-vehicles.query";
+import { toast } from "react-toastify";
+import { errorProps } from "../utils/alert.utils";
+import { ToastAlert } from "../app/components/ToastAlert";
+import { useAuthState } from "../context/auth.context";
 
 export default function Home() {
-  const [search, setSearch] = useState("");
+  const [request, setRequest] = useState<GetVehiclesByAdvanceSearchRequest>({
+    searchName: "",
+    condition: GetVehicleCondition.ALL,
+  });
   const client = useApolloClient();
-  const [vehicles, setVehicles] = useState([]);
+  const [vehicles, setVehicles] = useState<Array<Vehicle> | undefined>([]);
   const listing = useRef(null);
+  const auth = useAuthState();
 
   const handleSearch = (e: any) => {
-    setSearch(() => e.target.value);
+    setRequest(() => ({ ...request, searchName: e.target.value }));
   };
 
   const scrollToSection = (elementRef: any) => {
@@ -64,14 +55,70 @@ export default function Home() {
         className="w-full md:h-auto h-3/4"
         width={1000}
         height={1000}
+        priority
       />
 
       <SearchSection
         onChange={handleSearch}
+        handleChangeCity={(e: any) => {
+          const key = e.target.value;
+          setRequest(() => ({ ...request, city: cities[key] }));
+        }}
+        handleChangeCondition={(e: any) => {
+          const condition = conditionVehicles.find(
+            (condition) => condition.key === e.target.value
+          )?.key as GetVehicleCondition;
+          setRequest(() => ({
+            ...request,
+            condition: GetVehicleCondition[condition],
+          }));
+        }}
+        handleClickFavorites={async () => {
+          try {
+            if (!auth?.isAuthenticated) {
+              throw new Error(
+                "Necesitas estar registrado para usar esta funcionalidad"
+              );
+            }
+            const { data } = await client.query<
+              GetVehiclesResponse<"getFavoriteVehicles">
+            >({
+              query: GET_FAVORITE_VEHICLES,
+            });
+
+            scrollToSection(listing);
+            setVehicles(data?.getFavoriteVehicles?.nodes);
+          } catch (error) {
+            toast.error(<ToastAlert error={error} />, errorProps);
+          }
+        }}
+        handleClickRecommended={async () => {
+          try {
+            if (!auth?.isAuthenticated) {
+              throw new Error(
+                "Necesitas estar registrado para usar esta funcionalidad"
+              );
+            }
+            const { data } = await client.query<
+              GetVehiclesResponse<"getRecommendedVehicles">
+            >({
+              query: GET_RECOMMENDED_VEHICLES,
+            });
+
+            scrollToSection(listing);
+            setVehicles(data?.getRecommendedVehicles?.nodes);
+          } catch (error) {
+            toast.error(<ToastAlert error={error} />, errorProps);
+          }
+        }}
         onClick={async () => {
-          const { data } = await client.query({
-            query: QUERY(search),
+          const { data } = await client.query<
+            GetVehiclesResponse<"getVehiclesByAdvancedSearch">
+          >({
+            query: GET_VEHICLES_BY_ADVANCE_SEARCH,
+            variables: request,
           });
+
           scrollToSection(listing);
           setVehicles(data?.getVehiclesByAdvancedSearch?.nodes);
         }}

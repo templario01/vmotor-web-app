@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import MainLayout from "../../layouts/MainLayout";
 import Link from "next/link";
 import { useMutation } from "@apollo/client";
@@ -47,13 +47,9 @@ const SignInForm = () => {
     SIGN_IN
   );
 
-  useEffect(() => {
-    console.log(auth);
-    if (auth.isAuthenticated) {
-      router.push("/");
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  if (auth.isAuthenticated) {
+    router.push("/");
+  }
 
   const handleSignIn = async (e: any) => {
     try {
@@ -66,8 +62,7 @@ const SignInForm = () => {
       });
 
       authDispatch({ type: "login", token: data?.signIn.accessToken });
-      router.reload()
-      router.push("/home");
+      router.push("/");
     } catch (error) {
       toast.error(<ToastAlert error={error} />, errorProps);
     }
@@ -90,7 +85,7 @@ const SignInForm = () => {
             className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 f
             ocus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
              dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="you@mail.com"
+            placeholder="example@email.com"
             onChange={(e) => setForm({ ...form, email: e.target.value })}
           />
         </div>

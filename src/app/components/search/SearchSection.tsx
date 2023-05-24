@@ -1,17 +1,56 @@
-"use client"
+"use client";
+import dynamic from "next/dynamic";
 import { useAuthState } from "../../../context/auth.context";
-import { Buttom } from "../Buttom";
-import Select, { Option } from "../Select";
+import Select from "../Select";
 import { Search } from "./Search";
-import { Tooltip } from 'react-tooltip'
+const Buttom = dynamic(() => import("../Buttom"), {
+  ssr: false,
+});
 
-export default function SearchSection({ onChange, onClick }: any) {
+export const cities = [
+  "Todas",
+  "Amazonas",
+  "Áncash",
+  "Apurímac",
+  "Arequipa",
+  "Ayacucho",
+  "Cajamarca",
+  "Cusco",
+  "Huancavelica",
+  "Huánuco",
+  "Ica",
+  "Junín",
+  "La Libertad",
+  "Lambayeque",
+  "Lima",
+  "Loreto",
+  "Madre de Dios",
+  "Moquegua",
+  "Pasco",
+  "Piura",
+  "Puno",
+  "San Martín",
+  "Tacna",
+  "Tumbes",
+  "Ucayali",
+];
+
+export const conditionVehicles = [
+  { label: "cualquiera", key: "ALL" },
+  { label: "nuevo", key: "NEW" },
+  { label: "usado", key: "USED" },
+];
+
+export default function SearchSection({
+  onChange,
+  onClick,
+  handleClickRecommended,
+  handleClickFavorites,
+  handleChangeCity,
+  handleChangeCondition,
+}: any) {
   const auth = useAuthState();
 
-  if (auth.isAuthenticated) {
-    
-  }
-  
   return (
     <div className=" w-full h-auto bg-white flex justify-center">
       <div className="shadow-2xl flex flex-col gap-4 py-8 px-8 mx-10 rounded-2xl bg-white w-4/5 -translate-y-10">
@@ -21,35 +60,65 @@ export default function SearchSection({ onChange, onClick }: any) {
         </div>
         <div className="flex justify-between items-end">
           <div className="flex gap-4">
-            <Select label={"Provincia:"}>
-              <Option selected={true}>{"Todas"}</Option>
-              <Option>Amazonas</Option>
+            <Select
+              handleChange={handleChangeCity}
+              defaultValue={0}
+              label={"Ubicación:"}
+            >
+              {cities.map((city, i) => (
+                <option key={i} value={i}>
+                  {city}
+                </option>
+              ))}
             </Select>
-            <Select label={"Condición:"}>
-              <Option selected={true}>{"cualquiera"}</Option>
-              <Option>usados</Option>
+            <Select
+              handleChange={handleChangeCondition}
+              defaultValue={"ALL"}
+              label={"Condición:"}
+            >
+              {conditionVehicles.map(({ label, key }) => (
+                <option key={key} value={key}>
+                  {label}
+                </option>
+              ))}
             </Select>
           </div>
           <div className="flex gap-4">
             <Buttom
-              border={auth.isAuthenticated ? "border-blue-500" : "border-disabled-2" }
-              hover={auth.isAuthenticated ? "hover:text-white hover:bg-blue-700" : "hover:text-disabled-3 hover:bg-disabled-1"}
-              fontColor={auth.isAuthenticated ? "text-blue-800" : "text-disabled-3"}
+              border={
+                auth.isAuthenticated ? "border-blue-500" : "border-disabled-2"
+              }
+              hover={
+                auth.isAuthenticated
+                  ? "hover:text-white hover:bg-blue-700"
+                  : "hover:text-disabled-3 hover:bg-disabled-1"
+              }
+              fontColor={
+                auth.isAuthenticated ? "text-blue-800" : "text-disabled-3"
+              }
               text="Mis carros favoritos"
               color={auth.isAuthenticated ? "bg-blue-50" : "bg-disabled-1"}
               toolTipId="favorites"
               toolTipText="inicia sesión para usar esta funcionalidad"
-              onClick={undefined}
+              onClick={handleClickFavorites}
             />
             <Buttom
-              border={auth.isAuthenticated ? "border-blue-500" : "border-disabled-2" }
-              hover={auth.isAuthenticated ? "hover:text-white hover:bg-blue-700" : "hover:text-disabled-3 hover:bg-disabled-1"}
-              fontColor={auth.isAuthenticated ? "text-blue-800" : "text-disabled-3"}
+              border={
+                auth.isAuthenticated ? "border-blue-500" : "border-disabled-2"
+              }
+              hover={
+                auth.isAuthenticated
+                  ? "hover:text-white hover:bg-blue-700"
+                  : "hover:text-disabled-3 hover:bg-disabled-1"
+              }
+              fontColor={
+                auth.isAuthenticated ? "text-blue-800" : "text-disabled-3"
+              }
               text="Carros Recomendados"
               color={auth.isAuthenticated ? "bg-blue-50" : "bg-disabled-1"}
               toolTipId="recommended"
               toolTipText="inicia sesión para usar esta funcionalidad"
-              onClick={undefined}
+              onClick={handleClickRecommended}
             />
           </div>
         </div>

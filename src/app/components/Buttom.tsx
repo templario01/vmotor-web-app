@@ -1,3 +1,4 @@
+"use client";
 import { Tooltip } from "react-tooltip";
 import { useAuthState } from "../../context/auth.context";
 
@@ -12,7 +13,7 @@ export interface ButtomProps {
   toolTipText?: string;
 }
 
-export const Buttom = ({
+export default function Buttom({
   onClick,
   border,
   toolTipId,
@@ -21,7 +22,7 @@ export const Buttom = ({
   color = "bg-blue-600",
   hover = "hover:bg-blue-700",
   fontColor = "text-slate-50",
-}: ButtomProps) => {
+}: ButtomProps) {
   const auth = useAuthState();
 
   return (
@@ -39,4 +40,4 @@ export const Buttom = ({
       {toolTipId && !auth.isAuthenticated && <Tooltip id={toolTipId} />}
     </div>
   );
-};
+}

@@ -13,14 +13,13 @@ const defaultUser: User = {
 };
 
 const setToken = (token: string) => {
-  console.log(token);
+  console.log('[New Session]:', new Date());
   if (typeof window !== "undefined") {
     localStorage.setItem(TOKEN_KEY, token);
   }
 };
 
 const getToken = () => {
-  console.log("trying get token...");
   if (typeof window !== "undefined") {
     return localStorage.getItem(TOKEN_KEY) || null;
   }

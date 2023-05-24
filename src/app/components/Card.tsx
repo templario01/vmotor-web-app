@@ -1,7 +1,7 @@
 import { Fragment, ReactNode } from "react";
 import { Location } from "iconsax-react";
 import { Tag } from "./Tag";
-import { Buttom } from "./Buttom";
+import Buttom from "./Buttom";
 import Link from "next/link";
 
 export type Vehicle = {
