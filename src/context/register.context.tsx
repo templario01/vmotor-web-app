@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useState } from "react";
+import { Dispatch, SetStateAction, createContext, useState } from "react";
 
 export enum CurrentFormEnum {
   "REGISTER" = "REGISTER",
@@ -8,7 +8,7 @@ export enum CurrentFormEnum {
 
 export type RegisterContextType = {
   currentForm: CurrentFormEnum;
-  setCurrentForm: React.Dispatch<React.SetStateAction<CurrentFormEnum>>;
+  setCurrentForm: Dispatch<SetStateAction<CurrentFormEnum>>;
 };
 
 export const RegisterContext = createContext<RegisterContextType | null>(null);

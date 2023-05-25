@@ -1,26 +1,34 @@
 import { Fragment, ReactNode } from "react";
-import { Location } from "iconsax-react";
+import { Location, Star1 } from "iconsax-react";
 import { Tag } from "./Tag";
 import Buttom from "./Buttom";
 import Link from "next/link";
+import { Tooltip } from "react-tooltip";
+import {
+  ADD_FAVORITE_VEHICLE_TO_USER,
+  AddFavoriteVehicleInput,
+  AddFavoriteVehicleToUserResponse,
+} from "../../graphql/mutations/add-favorite-vehicle-to-user.mutation";
+import { useMutation } from "@apollo/client";
 
-export type Vehicle = {
+export type VehicleProps = {
+  uuid?: string;
   index: number;
-  url: string;
-  location: string;
-  description: string;
-  year: number;
-  condition: string;
-  price: number;
-  originalPrice: number;
-  currency: number;
-  frontImage: string;
-  mileage: number;
-  updatedAt: Date;
-  website: any;
+  url?: string;
+  location?: string;
+  description?: string;
+  year?: number;
+  condition?: string;
+  price?: number;
+  originalPrice?: number;
+  currency?: string;
+  frontImage?: string;
+  mileage?: number;
+  updatedAt?: Date;
+  website?: string;
 };
 export type CardProps = {
-  vehicle: Vehicle;
+  vehicle: VehicleProps;
   children?: ReactNode;
 };
 
@@ -50,13 +58,29 @@ export const Card = ({ vehicle }: CardProps) => {
     frontImage = unknownImage,
     description = "Descripción del vehículo",
     mileage = 0,
-    year = "undefined",
-    condition = "unknown",
+    year = 0,
     price = 0.0,
-    url = "#",
+    url,
+    condition,
+    uuid,
     website,
     index,
   } = vehicle;
+  const [addFavoriteVehicleToUser, { loading }] = useMutation<
+    AddFavoriteVehicleToUserResponse,
+    AddFavoriteVehicleInput
+  >(ADD_FAVORITE_VEHICLE_TO_USER);
+
+  const handleAddFavoriteVehicle = async () => {
+    try {
+      const { data } = await addFavoriteVehicleToUser({
+        variables: {
+          input: { vehicle: { uuid } },
+        },
+      });
+      console.log(data);
+    } catch {}
+  };
 
   return (
     <Fragment>
@@ -77,7 +101,7 @@ export const Card = ({ vehicle }: CardProps) => {
               <Location />
               {location}
             </p>
-            <div className="text-black font-bold text-xl mb-2">
+            <div className="text-black font-bold text-xl mb-2 mr-8">
               {description}
             </div>
             <div className="flex justify-between">
@@ -114,14 +138,13 @@ export const Card = ({ vehicle }: CardProps) => {
                 className="w-20 h-auto  mr-4"
                 src={`${
                   logos[
-                    `${
-                      website.name as "mercadolibre" | "neoauto" | "autocosmos"
-                    }`
+                    `${website as "mercadolibre" | "neoauto" | "autocosmos"}`
                   ]
                 }`}
-                alt="Avatar of Jonathan Reinink"
+                alt="concesionario"
               />
             </div>
+
             <Link href={`${url}`} target="_blank">
               <Buttom
                 color="bg-blue-600"
@@ -132,6 +155,17 @@ export const Card = ({ vehicle }: CardProps) => {
           </div>
         </div>
         {index < 3 && <Tag topNumber={index + 1} />}
+        <div className="relative">
+          <button
+            className="w-auto bg-orange-200 text-orange-700 p-2 cursor-pointer rounded-lg absolute right-0 mt-4 mr-4"
+            data-tooltip-id={"favorite"}
+            data-tooltip-content={"Agregar a favoritos"}
+            onClick={handleAddFavoriteVehicle}
+          >
+            <Star1 />
+            <Tooltip id={"favorite"} />
+          </button>
+        </div>
       </div>
     </Fragment>
   );

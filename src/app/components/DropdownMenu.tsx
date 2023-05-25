@@ -1,6 +1,6 @@
 "use client";
 import { useAuthDispatch, useAuthState } from "../../context/auth.context";
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { useMutation } from "@apollo/client";
@@ -11,6 +11,10 @@ import {
 import { toast } from "react-toastify";
 import { errorProps } from "../../utils/alert.utils";
 import { ToastAlert } from "../../app/components/ToastAlert";
+import {
+  VehiclesContext,
+  VehiclesContextType,
+} from "../../context/vehicles.context";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
@@ -22,11 +26,13 @@ export default function DropdownMenu() {
   const [hasNotifications, setHasNotifications] = useState(
     auth.hasActiveNotifications
   );
+  const { setVehicles } = useContext(VehiclesContext) as VehiclesContextType;
   const [toggleUserNotifications, { loading }] =
     useMutation<ToggleUserNotificationsResponse>(TOGGLE_NOTIFICATIONS);
 
   const handleLogOut = () => {
     authDispatch({ type: "logout" });
+    setVehicles([]);
   };
 
   const handleToggle = async () => {
@@ -102,7 +108,7 @@ export default function DropdownMenu() {
                     "block w-full px-4 py-2 text-left text-sm"
                   )}
                 >
-                  Sign out
+                  Cerrar Sesión
                 </button>
               )}
             </Menu.Item>

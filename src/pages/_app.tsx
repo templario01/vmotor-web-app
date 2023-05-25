@@ -8,6 +8,7 @@ import { RegisterProvider } from "../context/register.context";
 import { ToastContainer } from "react-toastify";
 import * as yup from "yup";
 import { AuthProvider } from "../context/auth.context";
+import { VehiclesProvider } from "../context/vehicles.context";
 
 yup.setLocale({
   mixed: {
@@ -27,13 +28,15 @@ yup.setLocale({
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-      <ApolloProvider client={apolloClient}>
+    <ApolloProvider client={apolloClient}>
+      <VehiclesProvider>
         <AuthProvider>
           <RegisterProvider>
             <Component {...pageProps} />
           </RegisterProvider>
           <ToastContainer />
         </AuthProvider>
-      </ApolloProvider>
+      </VehiclesProvider>
+    </ApolloProvider>
   );
 }

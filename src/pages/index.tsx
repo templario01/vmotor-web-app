@@ -8,8 +8,8 @@ import SearchSection, {
   conditionVehicles,
 } from "../app/components/search/SearchSection";
 import { useApolloClient } from "@apollo/client";
-import { Card } from "../app/components/Card";
-import { useRef, useState } from "react";
+import { Card, VehicleProps } from "../app/components/Card";
+import { useContext, useRef, useState } from "react";
 import {
   GET_VEHICLES_BY_ADVANCE_SEARCH,
   GetVehicleCondition,
@@ -23,6 +23,11 @@ import { toast } from "react-toastify";
 import { errorProps } from "../utils/alert.utils";
 import { ToastAlert } from "../app/components/ToastAlert";
 import { useAuthState } from "../context/auth.context";
+import {
+  VehiclesContext,
+  VehiclesContextType,
+} from "../context/vehicles.context";
+import { Footer } from "../app/components/Footer";
 
 export default function Home() {
   const [request, setRequest] = useState<GetVehiclesByAdvanceSearchRequest>({
@@ -30,9 +35,11 @@ export default function Home() {
     condition: GetVehicleCondition.ALL,
   });
   const client = useApolloClient();
-  const [vehicles, setVehicles] = useState<Array<Vehicle> | undefined>([]);
   const listing = useRef(null);
   const auth = useAuthState();
+  const { vehicles, setVehicles } = useContext(
+    VehiclesContext
+  ) as VehiclesContextType;
 
   const handleSearch = (e: any) => {
     setRequest(() => ({ ...request, searchName: e.target.value }));
@@ -124,14 +131,21 @@ export default function Home() {
         }}
       />
 
-      <div className="listing container mx-auto w-full h-96" ref={listing}>
+      <div className="listing container mx-auto w-full min-h-card h-auto" ref={listing}>
         <div className="w-full flex flex-col items-center gap-4">
-          {vehicles &&
-            vehicles.map((vehicle: any, i) => {
-              return <Card key={i} vehicle={{ ...vehicle, index: i }} />;
+          {vehicles !== undefined &&
+            vehicles.map((vehicle: Vehicle, index) => {
+              const vehicleProps: VehicleProps = {
+                ...vehicle,
+                updatedAt: new Date(vehicle?.updatedAt as string),
+                website: vehicle.website?.name,
+                index,
+              }
+              return <Card key={index} vehicle={vehicleProps} />;
             })}
         </div>
       </div>
+      <Footer/>
     </MainLayout>
   );
 }
