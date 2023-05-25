@@ -5,7 +5,7 @@ import {
   InMemoryCache,
 } from "@apollo/client";
 
-const httpLink = new HttpLink({ uri: "http://localhost:3300/graphql" });
+const httpLink = new HttpLink({ uri: process.env.API_URL });
 
 const authLink = new ApolloLink((operation, forward) => {
   const token = localStorage.getItem("token");
