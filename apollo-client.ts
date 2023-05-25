@@ -13,6 +13,7 @@ const authLink = new ApolloLink((operation, forward) => {
   operation.setContext({
     headers: {
       authorization: token ? `Bearer ${token}` : "",
+      "ngrok-skip-browser-warning": "69420",
     },
   });
 
