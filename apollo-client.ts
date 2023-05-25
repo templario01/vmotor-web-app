@@ -5,7 +5,9 @@ import {
   InMemoryCache,
 } from "@apollo/client";
 
-const httpLink = new HttpLink({ uri: process.env.API_URL });
+const url = process.env.NEXT_PUBLIC_API_URL;
+
+const httpLink = new HttpLink({ uri: `${url}/graphql` });
 
 const authLink = new ApolloLink((operation, forward) => {
   const token = localStorage.getItem("token");
@@ -13,7 +15,6 @@ const authLink = new ApolloLink((operation, forward) => {
   operation.setContext({
     headers: {
       authorization: token ? `Bearer ${token}` : "",
-      "ngrok-skip-browser-warning": "69420",
     },
   });
 
