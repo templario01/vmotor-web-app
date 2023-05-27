@@ -8,7 +8,7 @@ export interface AddFavoriteVehicleInput {
 }
 
 export interface AddFavoriteVehicleToUserResponse {
-  addFavoriteVehicleToUser: Vehicle;
+  addFavoriteVehicleToUser: Vehicle[];
 }
 
 export const ADD_FAVORITE_VEHICLE_TO_USER = gql`

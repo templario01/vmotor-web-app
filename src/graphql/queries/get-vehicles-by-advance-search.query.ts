@@ -30,6 +30,7 @@ export interface Vehicle {
   status?: string;
   currency?: string;
   website?: Website;
+  isFavorite?: boolean;
 }
 
 export interface GetVehiclesByAdvanceSearchRequest {

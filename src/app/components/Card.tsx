@@ -1,4 +1,4 @@
-import { Fragment, ReactNode } from "react";
+import { Fragment, ReactNode, useState } from "react";
 import { Location, Star1 } from "iconsax-react";
 import { Tag } from "./Tag";
 import Buttom from "./Buttom";
@@ -10,6 +10,11 @@ import {
   AddFavoriteVehicleToUserResponse,
 } from "../../graphql/mutations/add-favorite-vehicle-to-user.mutation";
 import { useMutation } from "@apollo/client";
+import {
+  DELETE_FAVORITE_VEHICLE_TO_USER,
+  DeleteFavoriteVehicleInput,
+  DeleteFavoriteVehicleToUserResponse,
+} from "../../graphql/mutations/delete-favorite-vehicle-to-user.mutation";
 
 export type VehicleProps = {
   uuid?: string;
@@ -26,6 +31,7 @@ export type VehicleProps = {
   mileage?: number;
   updatedAt?: Date;
   website?: string;
+  isFavorite?: boolean;
 };
 export type CardProps = {
   vehicle: VehicleProps;
@@ -65,21 +71,38 @@ export const Card = ({ vehicle }: CardProps) => {
     uuid,
     website,
     index,
+    isFavorite,
   } = vehicle;
-  const [addFavoriteVehicleToUser, { loading }] = useMutation<
+  const [addFavoriteVehicleToUser] = useMutation<
     AddFavoriteVehicleToUserResponse,
     AddFavoriteVehicleInput
   >(ADD_FAVORITE_VEHICLE_TO_USER);
+  const [deleteFavoriteVehicleToUser] = useMutation<
+    DeleteFavoriteVehicleToUserResponse,
+    DeleteFavoriteVehicleInput
+  >(DELETE_FAVORITE_VEHICLE_TO_USER);
+  const [isActiveStar, setIsActiveStar] = useState<boolean>(!!isFavorite);
 
   const handleAddFavoriteVehicle = async () => {
     try {
-      const { data } = await addFavoriteVehicleToUser({
-        variables: {
-          input: { vehicle: { uuid } },
-        },
-      });
-      console.log(data);
-    } catch {}
+      if (isActiveStar) {
+        const { data } = await deleteFavoriteVehicleToUser({
+          variables: {
+            input: { vehicle: { uuid } },
+          },
+        });
+        console.log(data);
+      } else {
+        const { data } = await addFavoriteVehicleToUser({
+          variables: {
+            input: { vehicle: { uuid } },
+          },
+        });
+        console.log(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -157,10 +180,19 @@ export const Card = ({ vehicle }: CardProps) => {
         {index < 3 && <Tag topNumber={index + 1} />}
         <div className="relative">
           <button
-            className="w-auto bg-orange-200 text-orange-700 p-2 cursor-pointer rounded-lg absolute right-0 mt-4 mr-4"
+            className={`w-auto ${
+              isActiveStar ? "bg-orange-600" : "bg-orange-200"
+            } ${
+              isActiveStar ? "text-orange-200" : "text-orange-700"
+            } p-2 cursor-pointer rounded-lg absolute right-0 mt-4 mr-4`}
             data-tooltip-id={"favorite"}
-            data-tooltip-content={"Agregar a favoritos"}
-            onClick={handleAddFavoriteVehicle}
+            data-tooltip-content={`${
+              isActiveStar ? "Eliminar de favoritos" : "Agregar a favoritos"
+            }`}
+            onClick={() => {
+              setIsActiveStar(!isActiveStar);
+              handleAddFavoriteVehicle();
+            }}
           >
             <Star1 />
             <Tooltip id={"favorite"} />
