@@ -9,7 +9,7 @@ import SearchSection, {
 } from "../app/components/search/SearchSection";
 import { useApolloClient } from "@apollo/client";
 import { Card, VehicleProps } from "../app/components/Card";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   GET_VEHICLES_BY_ADVANCE_SEARCH,
   GetVehicleCondition,
@@ -40,6 +40,7 @@ export default function Home() {
   const { vehicles, setVehicles } = useContext(
     VehiclesContext
   ) as VehiclesContextType;
+  const [favoriteVehicles, setFavoriteVehicles] = useState<Vehicle[]>([]);
 
   const handleSearch = (e: any) => {
     setRequest(() => ({ ...request, searchName: e.target.value }));
@@ -51,6 +52,93 @@ export default function Home() {
       behavior: "smooth",
     });
   };
+
+  const handleSearchVehicles = async () => {
+    const { data } = await client.query<
+      GetVehiclesResponse<"getVehiclesByAdvancedSearch">
+    >({
+      query: GET_VEHICLES_BY_ADVANCE_SEARCH,
+      variables: request,
+    });
+
+    const vehicles = data?.getVehiclesByAdvancedSearch?.nodes?.map(
+      (vehicle) => {
+        const isFavorite = favoriteVehicles.some(
+          (favoriteVehicle) => favoriteVehicle.uuid === vehicle.uuid
+        );
+
+        return { ...vehicle, isFavorite };
+      }
+    );
+
+    scrollToSection(listing);
+    setVehicles(vehicles);
+  };
+
+  const handleAddFavoriteVehicles = async () => {
+    try {
+      if (!auth?.isAuthenticated) {
+        throw new Error(
+          "Necesitas estar registrado para usar esta funcionalidad"
+        );
+      }
+      const { data } = await client.query<
+        GetVehiclesResponse<"getFavoriteVehicles">
+      >({
+        query: GET_FAVORITE_VEHICLES,
+      });
+
+      const vehicles = data?.getFavoriteVehicles?.nodes?.map((vehicle) => ({
+        ...vehicle,
+        isFavorite: true,
+      }));
+
+      scrollToSection(listing);
+      setVehicles(vehicles);
+    } catch (error) {
+      toast.error(<ToastAlert error={error} />, errorProps);
+    }
+  };
+
+  const handleRecommendedVehicles = async () => {
+    try {
+      if (!auth?.isAuthenticated) {
+        throw new Error(
+          "Necesitas estar registrado para usar esta funcionalidad"
+        );
+      }
+      const { data } = await client.query<
+        GetVehiclesResponse<"getRecommendedVehicles">
+      >({
+        query: GET_RECOMMENDED_VEHICLES,
+      });
+
+      const vehicles = data?.getRecommendedVehicles?.nodes?.map((vehicle) => {
+        const isFavorite = favoriteVehicles.some(
+          (favoriteVehicle) => favoriteVehicle.uuid === vehicle.uuid
+        );
+
+        return { ...vehicle, isFavorite };
+      });
+
+      scrollToSection(listing);
+      setVehicles(vehicles);
+    } catch (error) {
+      toast.error(<ToastAlert error={error} />, errorProps);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await client.query<
+        GetVehiclesResponse<"getFavoriteVehicles">
+      >({
+        query: GET_FAVORITE_VEHICLES,
+      });
+      const vehicles = data.getFavoriteVehicles.nodes as Vehicle[];
+      setFavoriteVehicles(vehicles);
+    })();
+  }, [client]);
 
   return (
     <MainLayout>
@@ -80,58 +168,15 @@ export default function Home() {
             condition: GetVehicleCondition[condition],
           }));
         }}
-        handleClickFavorites={async () => {
-          try {
-            if (!auth?.isAuthenticated) {
-              throw new Error(
-                "Necesitas estar registrado para usar esta funcionalidad"
-              );
-            }
-            const { data } = await client.query<
-              GetVehiclesResponse<"getFavoriteVehicles">
-            >({
-              query: GET_FAVORITE_VEHICLES,
-            });
-
-            scrollToSection(listing);
-            setVehicles(data?.getFavoriteVehicles?.nodes);
-          } catch (error) {
-            toast.error(<ToastAlert error={error} />, errorProps);
-          }
-        }}
-        handleClickRecommended={async () => {
-          try {
-            if (!auth?.isAuthenticated) {
-              throw new Error(
-                "Necesitas estar registrado para usar esta funcionalidad"
-              );
-            }
-            const { data } = await client.query<
-              GetVehiclesResponse<"getRecommendedVehicles">
-            >({
-              query: GET_RECOMMENDED_VEHICLES,
-            });
-
-            scrollToSection(listing);
-            setVehicles(data?.getRecommendedVehicles?.nodes);
-          } catch (error) {
-            toast.error(<ToastAlert error={error} />, errorProps);
-          }
-        }}
-        onClick={async () => {
-          const { data } = await client.query<
-            GetVehiclesResponse<"getVehiclesByAdvancedSearch">
-          >({
-            query: GET_VEHICLES_BY_ADVANCE_SEARCH,
-            variables: request,
-          });
-
-          scrollToSection(listing);
-          setVehicles(data?.getVehiclesByAdvancedSearch?.nodes);
-        }}
+        handleClickFavorites={handleAddFavoriteVehicles}
+        handleClickRecommended={handleRecommendedVehicles}
+        onClick={handleSearchVehicles}
       />
 
-      <div className="listing container mx-auto w-full min-h-card h-auto" ref={listing}>
+      <div
+        className="listing container mx-auto w-full min-h-card h-auto"
+        ref={listing}
+      >
         <div className="w-full flex flex-col items-center gap-4">
           {vehicles !== undefined &&
             vehicles.map((vehicle: Vehicle, index) => {
@@ -140,12 +185,12 @@ export default function Home() {
                 updatedAt: new Date(vehicle?.updatedAt as string),
                 website: vehicle.website?.name,
                 index,
-              }
+              };
               return <Card key={index} vehicle={vehicleProps} />;
             })}
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </MainLayout>
   );
 }

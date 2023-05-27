@@ -15,6 +15,7 @@ import {
   VehiclesContext,
   VehiclesContextType,
 } from "../../context/vehicles.context";
+import { apolloCache } from "../../../apollo-client";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
@@ -31,6 +32,7 @@ export default function DropdownMenu() {
     useMutation<ToggleUserNotificationsResponse>(TOGGLE_NOTIFICATIONS);
 
   const handleLogOut = () => {
+    apolloCache.reset();
     authDispatch({ type: "logout" });
     setVehicles([]);
   };

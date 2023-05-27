@@ -1,4 +1,6 @@
-export const successProps = {
+import { ToastOptions } from "react-toastify";
+
+export const successProps: ToastOptions = {
   autoClose: 5000,
   hideProgressBar: false,
   closeOnClick: true,
@@ -7,7 +9,7 @@ export const successProps = {
   progress: undefined,
 };
 
-export const errorProps = {
+export const errorProps: ToastOptions = {
   autoClose: 5000,
   hideProgressBar: false,
   closeOnClick: true,
