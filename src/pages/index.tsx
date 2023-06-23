@@ -135,7 +135,7 @@ export default function Home() {
       >({
         query: GET_FAVORITE_VEHICLES,
       });
-      const vehicles = data.getFavoriteVehicles.nodes as Vehicle[];
+      const vehicles = data?.getFavoriteVehicles.nodes as Vehicle[] || [];
       setFavoriteVehicles(vehicles);
     })();
   }, [client]);
