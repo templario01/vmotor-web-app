@@ -7,6 +7,15 @@ const Buttom = dynamic(() => import("../Buttom"), {
   ssr: false,
 });
 
+export interface SearchSectionProps {
+  onChange: (e: any) => void;
+  onClick: () => Promise<void>;
+  handleClickRecommended: () => Promise<void>;
+  handleClickFavorites: () => Promise<void>;
+  handleChangeCity: (e: any) => void;
+  handleChangeCondition: (e: any) => void;
+}
+
 export const cities = [
   "Todas",
   "Amazonas",
@@ -48,7 +57,7 @@ export default function SearchSection({
   handleClickFavorites,
   handleChangeCity,
   handleChangeCondition,
-}: any) {
+}: SearchSectionProps) {
   const auth = useAuthState();
 
   return (

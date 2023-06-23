@@ -128,6 +128,21 @@ export default function Home() {
     }
   };
 
+  const handleChangeCondition = (e: any) => {
+    const condition = conditionVehicles.find(
+      (condition) => condition.key === e.target.value
+    )?.key as GetVehicleCondition;
+    setRequest(() => ({
+      ...request,
+      condition: GetVehicleCondition[condition],
+    }));
+  };
+
+  const handleChangeCity = (e: any) => {
+    const key = e.target.value;
+    setRequest(() => ({ ...request, city: cities[key] }));
+  };
+
   useEffect(() => {
     (async () => {
       const { data } = await client.query<
@@ -135,7 +150,7 @@ export default function Home() {
       >({
         query: GET_FAVORITE_VEHICLES,
       });
-      const vehicles = data?.getFavoriteVehicles.nodes as Vehicle[] || [];
+      const vehicles = (data?.getFavoriteVehicles.nodes as Vehicle[]) || [];
       setFavoriteVehicles(vehicles);
     })();
   }, [client]);
@@ -155,24 +170,12 @@ export default function Home() {
 
       <SearchSection
         onChange={handleSearch}
-        handleChangeCity={(e: any) => {
-          const key = e.target.value;
-          setRequest(() => ({ ...request, city: cities[key] }));
-        }}
-        handleChangeCondition={(e: any) => {
-          const condition = conditionVehicles.find(
-            (condition) => condition.key === e.target.value
-          )?.key as GetVehicleCondition;
-          setRequest(() => ({
-            ...request,
-            condition: GetVehicleCondition[condition],
-          }));
-        }}
+        handleChangeCity={handleChangeCity}
+        handleChangeCondition={handleChangeCondition}
         handleClickFavorites={handleAddFavoriteVehicles}
         handleClickRecommended={handleRecommendedVehicles}
         onClick={handleSearchVehicles}
       />
-
       <div
         className="listing container mx-auto w-full min-h-card h-auto"
         ref={listing}
