@@ -62,13 +62,13 @@ export default function SearchSection({
 
   return (
     <div className=" w-full h-auto bg-white flex justify-center">
-      <div className="shadow-2xl flex flex-col gap-4 py-8 px-8 mx-10 rounded-2xl bg-white md:w-4/5 -translate-y-10">
+      <div className="shadow-2xl flex flex-col gap-4 py-8 px-8 mx-10 rounded-2xl bg-white md:w-4/5 w-full -translate-y-10">
         <div className="flex gap-4">
           <Search onChange={onChange} />
           <Buttom onClick={onClick} />
         </div>
         <div className="flex justify-between items-end flex-wrap">
-          <div className="flex gap-4">
+          <div className="flex gap-4 mb-4 md:mb-2">
             <Select
               handleChange={handleChangeCity}
               defaultValue={0}
@@ -92,7 +92,7 @@ export default function SearchSection({
               ))}
             </Select>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4 flex-wrap">
             <Buttom
               border={
                 auth.isAuthenticated ? "border-blue-500" : "border-disabled-2"
