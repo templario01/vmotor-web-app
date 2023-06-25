@@ -10,7 +10,7 @@ export type VehiclesContextType = {
 export const VehiclesContext = createContext<VehiclesContextType | null>(null);
 
 export const VehiclesProvider = ({ children }: any) => {
-  const [vehicles, setVehicles] = useState<Vehicle[] | undefined>([])
+  const [vehicles, setVehicles] = useState<Vehicle[] | undefined>(undefined);
 
   return (
     <VehiclesContext.Provider

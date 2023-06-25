@@ -7,6 +7,15 @@ const Buttom = dynamic(() => import("../Buttom"), {
   ssr: false,
 });
 
+export interface SearchSectionProps {
+  onChange: (e: any) => void;
+  onClick: () => Promise<void>;
+  handleClickRecommended: () => Promise<void>;
+  handleClickFavorites: () => Promise<void>;
+  handleChangeCity: (e: any) => void;
+  handleChangeCondition: (e: any) => void;
+}
+
 export const cities = [
   "Todas",
   "Amazonas",
@@ -48,7 +57,7 @@ export default function SearchSection({
   handleClickFavorites,
   handleChangeCity,
   handleChangeCondition,
-}: any) {
+}: SearchSectionProps) {
   const auth = useAuthState();
 
   return (
@@ -58,7 +67,7 @@ export default function SearchSection({
           <Search onChange={onChange} />
           <Buttom onClick={onClick} />
         </div>
-        <div className="flex justify-between items-end">
+        <div className="flex justify-between items-end border-red-400 border-2 flex-wrap">
           <div className="flex gap-4">
             <Select
               handleChange={handleChangeCity}

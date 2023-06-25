@@ -1,4 +1,4 @@
-const { noSSR } = require('next/dynamic');
+const { noSSR } = require("next/dynamic");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -7,10 +7,13 @@ const nextConfig = {
     appDir: true,
   },
   compiler: {
-    styledComponents: true
+    styledComponents: true,
   },
   images: {
-    remotePatterns: [{ protocol: "https", hostname: "es.chrysler.com" }],
+    remotePatterns: [
+      { protocol: "https", hostname: "es.chrysler.com" },
+      { protocol: "https", hostname: "i.gifer.com" },
+    ],
   },
   async redirects() {
     return [
