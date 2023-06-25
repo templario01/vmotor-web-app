@@ -67,7 +67,7 @@ export default function SearchSection({
           <Search onChange={onChange} />
           <Buttom onClick={onClick} />
         </div>
-        <div className="flex justify-between items-end">
+        <div className="flex justify-between items-end border-red-400 border-2 flex-wrap">
           <div className="flex gap-4">
             <Select
               handleChange={handleChangeCity}
