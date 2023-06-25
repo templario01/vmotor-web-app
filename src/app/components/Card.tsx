@@ -130,7 +130,7 @@ export const Card = ({ vehicle }: CardProps) => {
             <div className="flex justify-between">
               <p className="text-grey-darker text-base">
                 <span className="font-bold">Kilómetros:</span>
-                {` ${mileage} Km`}
+                {` ${mileage ? mileage + " Km" : "Sin información"} `}
               </p>
 
               <p className="text-grey-darker text-base">

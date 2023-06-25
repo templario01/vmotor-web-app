@@ -9,7 +9,7 @@ import SearchSection, {
 } from "../app/components/search/SearchSection";
 import { useApolloClient } from "@apollo/client";
 import { Card, VehicleProps } from "../app/components/Card";
-import { useContext, useEffect, useRef, useState } from "react";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import {
   GET_VEHICLES_BY_ADVANCE_SEARCH,
   GetVehicleCondition,
@@ -41,6 +41,7 @@ export default function Home() {
     VehiclesContext
   ) as VehiclesContextType;
   const [favoriteVehicles, setFavoriteVehicles] = useState<Vehicle[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSearch = (e: any) => {
     setRequest(() => ({ ...request, searchName: e.target.value }));
@@ -54,6 +55,7 @@ export default function Home() {
   };
 
   const handleSearchVehicles = async () => {
+    setIsLoading(true);
     const { data } = await client.query<
       GetVehiclesResponse<"getVehiclesByAdvancedSearch">
     >({
@@ -73,6 +75,7 @@ export default function Home() {
 
     scrollToSection(listing);
     setVehicles(vehicles);
+    setIsLoading(false);
   };
 
   const handleAddFavoriteVehicles = async () => {
@@ -82,6 +85,7 @@ export default function Home() {
           "Necesitas estar registrado para usar esta funcionalidad"
         );
       }
+      setIsLoading(true);
       const { data } = await client.query<
         GetVehiclesResponse<"getFavoriteVehicles">
       >({
@@ -95,6 +99,7 @@ export default function Home() {
 
       scrollToSection(listing);
       setVehicles(vehicles);
+      setIsLoading(false);
     } catch (error) {
       toast.error(<ToastAlert error={error} />, errorProps);
     }
@@ -107,6 +112,7 @@ export default function Home() {
           "Necesitas estar registrado para usar esta funcionalidad"
         );
       }
+      setIsLoading(true);
       const { data } = await client.query<
         GetVehiclesResponse<"getRecommendedVehicles">
       >({
@@ -123,6 +129,7 @@ export default function Home() {
 
       scrollToSection(listing);
       setVehicles(vehicles);
+      setIsLoading(false);
     } catch (error) {
       toast.error(<ToastAlert error={error} />, errorProps);
     }
@@ -181,7 +188,23 @@ export default function Home() {
         ref={listing}
       >
         <div className="w-full flex flex-col items-center gap-4">
-          {vehicles !== undefined &&
+          {!vehicles && isLoading === true && (
+            <Fragment>
+              <div className="flex items-center gap-2">
+                <div className="text-gray-700">cargando</div>
+                <Image
+                  src={
+                    "https://i.gifer.com/origin/34/34338d26023e5515f6cc8969aa027bca_w200.gif"
+                  }
+                  height={36}
+                  width={36}
+                  alt={`loading`}
+                  unoptimized={true}
+                ></Image>
+              </div>
+            </Fragment>
+          )}
+          {vehicles &&
             vehicles.map((vehicle: Vehicle, index) => {
               const vehicleProps: VehicleProps = {
                 ...vehicle,
