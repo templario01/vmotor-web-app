@@ -165,15 +165,35 @@ export default function Home() {
   return (
     <MainLayout>
       <NabBar />
-      <Banner />
-      <Image
-        alt="Vehicles"
-        src="https://es.chrysler.com/content/dam/fca-brands/na/chrysler/en_us/2023/300c/desktop/2023-chrysler-BM-VLP-300c-hero-perfnlux.jpg"
-        className="w-full md:h-auto h-3/4"
-        width={1000}
-        height={1000}
-        priority
-      />
+
+      {/*       <div className="overflow-hidden">
+        <img
+          src="https://es.chrysler.com/content/dam/fca-brands/na/chrysler/en_us/2023/300c/desktop/2023-chrysler-BM-VLP-300c-hero-perfnlux.jpg"
+          alt="vehiculo"
+          className="sm:w-full"
+        />
+      </div> */}
+      <div
+        className="relative overflow-hidden bg-cover bg-no-repeat"
+        style={{
+          backgroundPosition: "50%",
+          backgroundImage:
+            "url('https://es.chrysler.com/content/dam/fca-brands/na/chrysler/en_us/2023/300c/desktop/2023-chrysler-BM-VLP-300c-hero-perfnlux.jpg')",
+          height: "600px",
+        }}
+      >
+        <div className="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-[hsla(0,0%,0%,0.55)] bg-fixed">
+          <div className="flex h-full items-center justify-center">
+            <div className="px-6 text-center text-white md:px-12">
+              <h1 className="mt-2 mb-16 text-5xl font-bold tracking-tight md:text-6xl xl:text-7xl">
+                El carro de tus sueños a un<br />
+                <span>click de distancia</span>
+              </h1>
+
+            </div>
+          </div>
+        </div>
+      </div>
 
       <SearchSection
         onChange={handleSearch}
