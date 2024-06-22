@@ -9,6 +9,7 @@ module.exports = {
   theme: {
     extend: {
       width: {
+        "compact-card": "540px",
         card: "720px",
       },
       height: {

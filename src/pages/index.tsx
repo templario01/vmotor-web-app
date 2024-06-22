@@ -2,11 +2,10 @@
 import Image from "next/image";
 import MainLayout from "../layouts/MainLayout";
 import NabBar from "../app/components/NavBar";
-import { Banner } from "../app/components/Banner";
 import SearchSection, {
   cities,
   conditionVehicles,
-} from "../app/components/search/SearchSection";
+} from "../app/components/search-section/SearchSection";
 import { useApolloClient } from "@apollo/client";
 import { Card, VehicleProps } from "../app/components/Card";
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
@@ -28,6 +27,8 @@ import {
   VehiclesContextType,
 } from "../context/vehicles.context";
 import { Footer } from "../app/components/Footer";
+import RecommendedSection from "../app/components/recommended-section/RecommendedSection";
+import { GET_GENERAL_RECOMMENDED_VEHICLES } from "../graphql/queries/get-general-recommended-vehicles";
 
 export default function Home() {
   const [request, setRequest] = useState<GetVehiclesByAdvanceSearchRequest>({
@@ -42,6 +43,7 @@ export default function Home() {
   ) as VehiclesContextType;
   const [favoriteVehicles, setFavoriteVehicles] = useState<Vehicle[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [recommendedVehicles, setRecommendedVehicles] = useState<Vehicle[]>();
 
   const handleSearch = (e: any) => {
     setRequest(() => ({ ...request, searchName: e.target.value }));
@@ -162,6 +164,16 @@ export default function Home() {
     })();
   }, [client]);
 
+  useEffect(() => {
+    (async () => {
+      const { data } = await client.query<any>({
+        query: GET_GENERAL_RECOMMENDED_VEHICLES,
+      });
+      setRecommendedVehicles(data.getGeneralRecommendedVehicles);
+      console.log(recommendedVehicles)
+    })();
+  }, []);
+
   return (
     <MainLayout>
       <NabBar />
@@ -186,10 +198,10 @@ export default function Home() {
           <div className="flex h-full items-center justify-center">
             <div className="px-6 text-center text-white md:px-12">
               <h1 className="mt-2 mb-16 text-5xl font-bold tracking-tight md:text-6xl xl:text-7xl">
-                El carro de tus sueños a un<br />
+                El carro de tus sueños a un
+                <br />
                 <span>click de distancia</span>
               </h1>
-
             </div>
           </div>
         </div>
@@ -207,6 +219,12 @@ export default function Home() {
         className="listing container mx-auto w-full min-h-card h-auto"
         ref={listing}
       >
+        {vehicles && (
+          <div className="listing container mx-28 w-full min-h-card h-auto">
+            <span className="text-2xl">Resultados:</span>{" "}
+            <span className="text-2xl">{vehicles.length}</span>
+          </div>
+        )}
         <div className="w-full flex flex-col items-center gap-4">
           {!vehicles && isLoading === true && (
             <Fragment>
@@ -224,6 +242,7 @@ export default function Home() {
               </div>
             </Fragment>
           )}
+
           {vehicles &&
             vehicles.map((vehicle: Vehicle, index) => {
               const vehicleProps: VehicleProps = {
@@ -236,6 +255,7 @@ export default function Home() {
             })}
         </div>
       </div>
+      <RecommendedSection vehicles={recommendedVehicles} />
       <Footer />
     </MainLayout>
   );
