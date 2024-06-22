@@ -170,9 +170,9 @@ export default function Home() {
         query: GET_GENERAL_RECOMMENDED_VEHICLES,
       });
       setRecommendedVehicles(data.getGeneralRecommendedVehicles);
-
+      console.log(recommendedVehicles)
     })();
-  });
+  }, []);
 
   return (
     <MainLayout>
@@ -219,6 +219,12 @@ export default function Home() {
         className="listing container mx-auto w-full min-h-card h-auto"
         ref={listing}
       >
+        {vehicles && (
+          <div className="listing container mx-28 w-full min-h-card h-auto">
+            <span className="text-2xl">Resultados:</span>{" "}
+            <span className="text-2xl">{vehicles.length}</span>
+          </div>
+        )}
         <div className="w-full flex flex-col items-center gap-4">
           {!vehicles && isLoading === true && (
             <Fragment>
@@ -236,6 +242,7 @@ export default function Home() {
               </div>
             </Fragment>
           )}
+
           {vehicles &&
             vehicles.map((vehicle: Vehicle, index) => {
               const vehicleProps: VehicleProps = {

@@ -5,7 +5,7 @@ import { CardProps, parseToDecimal, unknownImage } from "./Card";
 
 const logos = {
   mercadolibre:
-    "https://cdnmain-website.latina.pe/wp-content/uploads/2020/03/22015055/43335.jpg",
+    "https://www.zenvia.com/wp-content/uploads/2022/02/ML2.pngwidth500nameML2.png",
   neoauto:
     "https://upload.wikimedia.org/wikipedia/commons/0/00/Empresa_de_carros.png",
   autocosmos:
@@ -45,7 +45,7 @@ export const CompactCard = ({ vehicle }: CardProps) => {
       <div
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
-        className="w-compact-card lg:flex cursor-pointer mb-8 pb-4"
+        className="w-compact-card lg:flex cursor-pointer mb-8 pb-4 h-80"
       >
         <div
           className="rounded-l-2xl h-48 lg:h-auto lg:w-48 flex-none bg-cover text-center overflow-hidden"
