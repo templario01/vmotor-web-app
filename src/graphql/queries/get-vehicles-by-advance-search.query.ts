@@ -15,6 +15,7 @@ export interface Website {
 export interface Vehicle {
   uuid?: string;
   url?: string;
+  name?: string;
   externalId?: string;
   description?: string;
   price?: number;
@@ -71,6 +72,7 @@ export const GET_VEHICLES_BY_ADVANCE_SEARCH = gql`
       nodes {
         uuid
         url
+        name
         externalId
         description
         price

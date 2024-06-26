@@ -20,6 +20,7 @@ export type VehicleProps = {
   uuid?: string;
   index: number;
   url?: string;
+  name?: string;
   location?: string;
   description?: string;
   year?: number;

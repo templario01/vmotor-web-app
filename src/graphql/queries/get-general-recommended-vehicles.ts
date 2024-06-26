@@ -4,6 +4,7 @@ export const GET_GENERAL_RECOMMENDED_VEHICLES = gql`
   query {
 	getGeneralRecommendedVehicles{
         url
+        name
         externalId
         description
         price
