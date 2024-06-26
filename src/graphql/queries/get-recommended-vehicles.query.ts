@@ -6,6 +6,7 @@ export const GET_RECOMMENDED_VEHICLES = gql`
       nodes {
         uuid
         url
+        name
         externalId
         description
         price

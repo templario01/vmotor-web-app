@@ -247,6 +247,7 @@ export default function Home() {
             vehicles.map((vehicle: Vehicle, index) => {
               const vehicleProps: VehicleProps = {
                 ...vehicle,
+                description: vehicle.description ?? vehicle.name,
                 updatedAt: new Date(vehicle?.updatedAt as string),
                 website: vehicle.website?.name,
                 index,
